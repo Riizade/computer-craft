@@ -22,7 +22,7 @@ end
 
 --- if "ready" is passed as the first argument, update all other scripts ---
 if first_arg == "ready" then
-    files = {"mine", "strip_mine", "turtle_min_fuel", "fell2", "floor", "items"}
+    files = {"mine", "strip_mine", "min_fuel", "fell2", "floor", "items"}
     update_files(files)
 else --- otherwise only update the update script, then call it to update other scripts ---
     files = {"update"}
