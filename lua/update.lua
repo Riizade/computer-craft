@@ -1,11 +1,31 @@
---- updates all programs written by riizade ---
---- run by executing `pastebin get cumLvdB9 update` then `update` ---
+--- this script is the entry point for all other programs ---
+--- execute "pastebin get cumLvdB9 update" to install this script ---
+--- then execute "update", which should always give you the latest version of all scripts (including the update script) ---
 
---- delete existing install_all ---
-shell.run("delete", "install_all")
+args = {...}
+first_arg = args[1]
 
---- fetch install_all ---
-shell.run("pastebin", "get", "GisFepzJ", "install_all")
+function download_from_github(filename)
+    local response = get("https://raw.githubusercontent.com/Riizade/computer-craft/main/lua/" .. filename .. ".lua")
+    shell.run("delete", filename) --- clear the old version
+    local file = fs.open(filename, "w") --- open and write file
+    file.write(response.readAll())
+    file.close()
+end
 
---- run install_all ---
-shell.run("install_all")
+function update_files(files)
+    for index, filename in pairs(files) do
+        download_from_github(filename)
+    end
+end
+
+--- if "ready" is passed as the first argument, update all other scripts ---
+if first_arg == "ready"
+    files = {"mine", "strip_mine", "turtle_min_fuel", "fell2"}
+    update_files(files)
+else --- otherwise only update the update script, then call it to update other scripts ---
+    files = {}
+    files[0] = {"update"}
+    update_files(files)
+    shell.run("update", "ready")
+end
