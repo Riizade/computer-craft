@@ -20,7 +20,7 @@ local right = true
 local current_line_blocks = 0
 local completed_lines = 0
 turtle.forward()
-if width >= 1
+if width >= 1 then
     if right then
         turtle.turnRight()
     else
