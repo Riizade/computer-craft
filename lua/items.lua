@@ -16,7 +16,7 @@ function count_blocks(block_name)
         turtle.select(i)
         data = turtle.getItemDetail()
         if data.name == block_name then
-            count += turtle.getItemCount(i)
+            count = turtle.getItemCount(i) + count
         end
     end
 
