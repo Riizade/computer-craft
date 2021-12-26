@@ -34,7 +34,6 @@ while turtle.getFuelLevel() > 0 and items.count_blocks(block_data.name) > 0 do
     if err ~= nil then
         print("could not place block: " .. err)
     end
-    turtle.forward()
     current_line_blocks = current_line_blocks + 1
 
     --- find next slot full of the desired item or break
@@ -47,7 +46,9 @@ while turtle.getFuelLevel() > 0 and items.count_blocks(block_data.name) > 0 do
     end
 
     --- if we are at the end of the line
-    if current_line_blocks >= width then
+    if current_line_blocks < width then
+        turtle.forward()
+    else
         --- move to the next line
         if width > 1 then --- if the width is 1, we will never turn in the first place
             if right then
