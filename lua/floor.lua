@@ -20,8 +20,13 @@ local right = true
 local current_line_blocks = 0
 local completed_lines = 0
 turtle.forward()
-print("pre-loopy")
-print(tostring(items.count_blocks(block_data.name)))
+if width >= 1
+    if right then
+        turtle.turnRight()
+    else
+        turtle.turnLeft()
+    end
+end
 while turtle.getFuelLevel() > 0 and items.count_blocks(block_data.name) > 0 do
     turtle.select(current_slot)
     --- if we are at the end of the line
@@ -59,7 +64,7 @@ while turtle.getFuelLevel() > 0 and items.count_blocks(block_data.name) > 0 do
 
     --- find next slot full of the desired item or break
     if turtle.getItemCount(current_slot) <= 0 then
-        current_slot = turtle.find_next()
+        current_slot = items.find_next()
         if current_slot == nil then
             print("ran out of " .. block_data.name)
             break
