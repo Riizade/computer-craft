@@ -14,6 +14,7 @@ turtle.select(current_slot)
 
 shell.run("min_fuel", tostring(min_fuel))
 block_data = turtle.getItemDetail()
+print(block_data.name)
 
 local right = true
 local current_line_blocks = 0
@@ -34,8 +35,12 @@ while turtle.getFuelLevel() > 0 and items.count_blocks(block_name) > 0 do
         completed_lines = completed_lines + 1
 
         if length ~= nil and completed_lines >= length then
+            print("completed desired length")
             break
         end
+
+
+        shell.run("min_fuel", tostring(min_fuel))
     end
 
     --- find next slot full of the desired item or break
@@ -51,3 +56,5 @@ while turtle.getFuelLevel() > 0 and items.count_blocks(block_name) > 0 do
     turtle.forward()
     current_line_blocks = current_line_blocks + 1
 end
+
+print("finished job")
