@@ -53,7 +53,10 @@ while turtle.getFuelLevel() > 0 and items.count_blocks(block_name) > 0 do
     end
 
     turtle.select(current_slot)
-    turtle.placeDown()
+    placed, err = turtle.placeDown()
+    if err ~= nil then
+        print("could not place block: " .. err)
+    end
     turtle.forward()
     current_line_blocks = current_line_blocks + 1
 end
