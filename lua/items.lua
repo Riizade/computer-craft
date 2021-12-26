@@ -2,7 +2,7 @@ function find_next(block_name)
     for i=1,16 do
         turtle.select(i)
         local data = turtle.getItemDetail()
-        if data.name == block_name then
+        if data ~= nil and data.name == block_name then
             return i
         end
     end
