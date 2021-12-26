@@ -58,7 +58,7 @@ while turtle.getFuelLevel() > 0 and items.count_blocks(block_data.name) > 0 do
             else
                 turtle.turnRight()
                 turtle.forward()
-                turtle.turnLeft()
+                turtle.turnRight()
             end
         else
             turtle.forward()
