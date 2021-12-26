@@ -14,7 +14,7 @@ turtle.select(current_slot)
 
 shell.run("min_fuel", tostring(min_fuel))
 block_data = turtle.getItemDetail()
-print(block_data.name)
+print("placing " .. block_data.name)
 
 local right = true
 local current_line_blocks = 0
@@ -47,6 +47,7 @@ while turtle.getFuelLevel() > 0 and items.count_blocks(block_name) > 0 do
     if turtle.getItemCount(current_slot) <= 0 then
         current_slot = turtle.find_next()
         if current_slot == nil then
+            print("ran out of " .. block_data.name)
             break
         end
     end
