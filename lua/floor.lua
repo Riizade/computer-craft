@@ -14,7 +14,7 @@ block_data = turtle.getItemDetail()
 
 
 shell.run("min_fuel", tostring(min_fuel))
-print("placing " .. block_data.name)
+print("placing block " .. block_data.name)
 
 local right = true
 local current_line_blocks = 0
