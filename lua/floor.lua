@@ -20,7 +20,7 @@ local right = true
 local current_line_blocks = 0
 local completed_lines = 0
 turtle.forward()
-print("pre-loopo")
+print("pre-loop")
 print(tostring(items.count_blocks(block_data.name)))
 while turtle.getFuelLevel() > 0 and items.count_blocks(block_data.name) > 0 do
     print("a")
