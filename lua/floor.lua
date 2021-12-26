@@ -10,10 +10,10 @@ end
 local min_fuel = width + 1
 local current_slot = 1
 turtle.select(current_slot)
+block_data = turtle.getItemDetail()
 
 
 shell.run("min_fuel", tostring(min_fuel))
-block_data = turtle.getItemDetail()
 print("placing " .. block_data.name)
 
 local right = true
