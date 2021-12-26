@@ -17,7 +17,7 @@ function update_files(files)
     end
 end
 
-files = {"update"}
+files = {"update", "json"}
 update_files(files)
 shell.run("update")
 
