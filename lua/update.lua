@@ -21,10 +21,12 @@ end
 
 --- if "ready" is passed as the first argument, update all other scripts ---
 if first_arg == "ready" then
+    print("updating all scripts...")
     files = {"mine", "strip_mine", "turtle_min_fuel", "fell2", "floor", "items"}
     update_files(files)
 else --- otherwise only update the update script, then call it to update other scripts ---
     files = {"update"}
+    print("updating update script...")
     update_files(files)
     shell.run("update", "ready")
 end
