@@ -31,7 +31,7 @@ while turtle.getFuelLevel() > 0 and items.count_blocks(block_name) > 0 do
         turtle.forward()
         --- update counts
         current_line_blocks = 0
-        completed_lines += 1
+        completed_lines = completed_lines + 1
 
         if length ~= nil and completed_lines >= length then
             break
@@ -49,4 +49,5 @@ while turtle.getFuelLevel() > 0 and items.count_blocks(block_name) > 0 do
     turtle.select(current_slot)
     turtle.placeDown()
     turtle.forward()
+    current_line_blocks = current_line_blocks + 1
 end
