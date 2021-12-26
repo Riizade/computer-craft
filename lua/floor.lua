@@ -20,14 +20,12 @@ local right = true
 local current_line_blocks = 0
 local completed_lines = 0
 turtle.forward()
-print("pre-loop")
+print("pre-loopy")
 print(tostring(items.count_blocks(block_data.name)))
 while turtle.getFuelLevel() > 0 and items.count_blocks(block_data.name) > 0 do
-    print("a")
     turtle.select(current_slot)
     --- if we are at the end of the line
     if current_line_blocks >= width then
-        print("b")
         --- move to the next line
         if right then
             turtle.turnLeft()
@@ -48,7 +46,6 @@ while turtle.getFuelLevel() > 0 and items.count_blocks(block_data.name) > 0 do
         shell.run("min_fuel", tostring(min_fuel))
     end
 
-    print("c")
     --- find next slot full of the desired item or break
     if turtle.getItemCount(current_slot) <= 0 then
         current_slot = turtle.find_next()
@@ -58,10 +55,8 @@ while turtle.getFuelLevel() > 0 and items.count_blocks(block_data.name) > 0 do
         end
     end
 
-    print("d")
     turtle.select(current_slot)
     placed, err = turtle.placeDown()
-    print("e")
     if err ~= nil then
         print("could not place block: " .. err)
     end
