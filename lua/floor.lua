@@ -28,7 +28,24 @@ if width >= 1 then
     end
 end
 while turtle.getFuelLevel() > 0 and items.count_blocks(block_data.name) > 0 do
+    --- place block down
     turtle.select(current_slot)
+    placed, err = turtle.placeDown()
+    if err ~= nil then
+        print("could not place block: " .. err)
+    end
+    turtle.forward()
+    current_line_blocks = current_line_blocks + 1
+
+    --- find next slot full of the desired item or break
+    if turtle.getItemCount(current_slot) <= 0 then
+        current_slot = items.find_next()
+        if current_slot == nil then
+            print("ran out of " .. block_data.name)
+            break
+        end
+    end
+
     --- if we are at the end of the line
     if current_line_blocks >= width then
         --- move to the next line
@@ -61,23 +78,6 @@ while turtle.getFuelLevel() > 0 and items.count_blocks(block_data.name) > 0 do
 
         shell.run("min_fuel", tostring(min_fuel))
     end
-
-    --- find next slot full of the desired item or break
-    if turtle.getItemCount(current_slot) <= 0 then
-        current_slot = items.find_next()
-        if current_slot == nil then
-            print("ran out of " .. block_data.name)
-            break
-        end
-    end
-
-    turtle.select(current_slot)
-    placed, err = turtle.placeDown()
-    if err ~= nil then
-        print("could not place block: " .. err)
-    end
-    turtle.forward()
-    current_line_blocks = current_line_blocks + 1
 end
 
 print("finished job")
