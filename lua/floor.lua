@@ -27,12 +27,23 @@ while turtle.getFuelLevel() > 0 and items.count_blocks(block_data.name) > 0 do
     --- if we are at the end of the line
     if current_line_blocks >= width then
         --- move to the next line
-        if right then
-            turtle.turnLeft()
+        if width > 1 then --- if the width is 1, we will never turn in the first place
+            if right then
+                turtle.turnLeft()
+                turtle.forward()
+                turtle.turnLeft()
+            else
+                turtle.turnRight()
+                turtle.forward()
+                turtle.turnLeft()
+            end
         else
-            turtle.turnRight()
+            turtle.forward()
         end
-        turtle.forward()
+
+        -- flip direction for next line
+        right = not right
+
         --- update counts
         current_line_blocks = 0
         completed_lines = completed_lines + 1
