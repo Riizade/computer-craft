@@ -36,13 +36,14 @@ while turtle.getFuelLevel() > 0 and items.count_blocks(block_data.name) > 0 do
     end
     current_line_blocks = current_line_blocks + 1
 
-    --- find next slot full of the desired item or break
+    --- break if we don't have enough blocks to place a line
+    if items.count_blocks(block_data.name) < width then
+        print("ran out of block: " .. block_data.name)
+        break
+    end
+    --- find next slot full of the desired item
     if turtle.getItemCount(current_slot) <= 0 then
         current_slot = items.find_next()
-        if current_slot == nil then
-            print("ran out of " .. block_data.name)
-            break
-        end
     end
 
     --- if we are at the end of the line

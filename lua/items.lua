@@ -1,7 +1,7 @@
 function find_next(block_name)
     for i=1,16 do
         turtle.select(i)
-        data = turtle.getItemDetail()
+        local data = turtle.getItemDetail()
         if data.name == block_name then
             return i
         end
