@@ -4,7 +4,7 @@ args = {...}
 
 local width = tonumber(args[1])
 local length = args[2]
-if length != nil then
+if length ~= nil then
     length = tonumber(args[2])
 end
 local min_fuel = width + 1
@@ -33,7 +33,7 @@ while turtle.getFuelLevel() > 0 and items.count_blocks(block_name) > 0 do
         current_line_blocks = 0
         completed_lines += 1
 
-        if length != nil and completed_lines >= length then
+        if length ~= nil and completed_lines >= length then
             break
         end
     end
