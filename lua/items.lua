@@ -14,8 +14,8 @@ function count_blocks(block_name)
     local count = 0
     for i=1,16 do
         turtle.select(i)
-        data = turtle.getItemDetail()
-        if data.name == block_name then
+        local data = turtle.getItemDetail()
+        if data ~= nil and data.name == block_name then
             count = turtle.getItemCount(i) + count
         end
     end
