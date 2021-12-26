@@ -17,15 +17,25 @@ block_data = turtle.getItemDetail()
 
 local right = true
 local current_line_blocks = 0
+local completed_lines = 0
 turtle.forward()
 while turtle.getFuelLevel() > 0 and items.count_blocks(block_name) > 0 do
+    --- if we are at the end of the line
     if current_line_blocks >= width then
+        --- move to the next line
         if right then
             turtle.turnLeft()
         else
             turtle.turnRight()
         end
         turtle.forward()
+        --- update counts
+        current_line_blocks = 0
+        completed_lines += 1
+
+        if length != nil and completed_lines >= length then
+            break
+        end
     end
 
     --- find next slot full of the desired item or break
