@@ -2,8 +2,6 @@
 --- execute "pastebin get cumLvdB9 install" to install this script ---
 --- then execute "install", which should always give you the latest version of all scripts (including the update script) ---
 
-args = {...}
-
 function download_from_github(filename)
     print("updating " .. filename .. "...")
     local response = http.get("https://raw.githubusercontent.com/Riizade/computer-craft/main/lua/" .. filename .. ".lua")
@@ -21,6 +19,6 @@ end
 
 files = {"update"}
 update_files(files)
-shell.run("update", "ready")
+shell.run("update")
 
 return {download_from_github = download_from_github, update_files = update_files}
