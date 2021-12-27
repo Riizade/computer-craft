@@ -23,4 +23,15 @@ function count_blocks(block_name)
     return count
 end
 
-return { find_next = find_next, count_blocks = count_blocks }
+function is_log(block_name)
+    if block_name:find("log") then
+        return true
+    else
+        return false
+    end
+end
+
+return {
+    find_next = find_next,
+    count_blocks = count_blocks,
+    is_log = is_log }
