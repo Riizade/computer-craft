@@ -24,5 +24,5 @@ function update_files(files)
     end
 end
 
-files = {"update", "mine", "strip_mine", "min_fuel", "fell2", "floor", "items"}
+files = {"update", "mine", "strip_mine", "min_fuel", "mine_vein", "floor", "lib_items", "lib_utils", "lib_navigation"}
 update_files(files)

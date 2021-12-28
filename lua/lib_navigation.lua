@@ -1,3 +1,5 @@
+local utils = require("lib_utils")
+
 --- track position and movement history as global variables ---
 position = vector.new(0, 0, 0)
 direction = vector.new(0, 0, 1)
@@ -31,6 +33,15 @@ end
 
 function direction_string_to_vector(string)
     return vector.new(direction_coord(string[0]), direction_coord(string[1]), direction_coord(string[2]))
+end
+
+function vector_to_string(vec)
+    return string.format("%d,%d,%d", vec.x, vec.y, vec.z)
+end
+
+function string_to_vector(s)
+    list = utils.split(s)
+    return vector.new(list[0], list[1], list[2])
 end
 
 function rotations_count(src_dir_string, dest_dir_string, rotations_table)
@@ -77,6 +88,20 @@ function rotations_needed_str(src_dir_string, dest_dir_string)
     else
         return clockwise_count, "clockwise"
     end
+end
+
+--- will not work properly if the vector is not a direction vector (unit vector with exactly one non-zero axis)
+function rotate_direction_vector_clockwise(vec)
+    local clockwise, counterclockwise = rotation_tables()
+    local s = direction_vector_to_string(vec)
+    return direction_string_to_vector(clockwise[s])
+end
+
+--- will not work properly if the vector is not a direction vector (unit vector with exactly one non-zero axis)
+function rotate_direction_vector_counterclockwise(vec)
+    local clockwise, counterclockwise = rotation_tables()
+    local s = direction_vector_to_string(vec)
+    return direction_string_to_vector(counterclockwise[s])
 end
 
 function rotations_needed(src_dir, dest_dir)
@@ -136,9 +161,66 @@ function check_blocks()
     return blocks
 end
 
---- checks if the given position is adjacent to the turtle
+--- checks if the given position is above the turtle
+function is_above(vec)
+    if position + vector.new(0, 1, 0) == vec then
+        return true
+    else
+        return false
+    end
+end
+
+--- checks if the given position is below the turtle
+function is_below(vec)
+    if position + vector.new(0, -1, 0) == vec then
+        return true
+    else
+        return false
+    end
+end
+
+--- checks if the given position is left of the turtle
+function is_left(vec)
+    local left = rotate_direction_vector_counterclockwise(direction)
+    if position + left == vec then
+        return true
+    else
+        return false
+    end
+end
+
+--- checks if the given position is right of the turtle
+function is_right(vec)
+    local right = rotate_direction_vector_clockwise(direction)
+    if position + right == vec then
+        return true
+    else
+        return false
+    end
+end
+
+--- checks if the given position is in front of the turtle
+function is_front(vec)
+    if position + direction == vec then
+        return true
+    else
+        return false
+    end
+end
+
+--- checks if the given position is behind the turtle
+function is_behind(vec)
+    local behind = rotate_direction_vector_clockwise(rotate_direction_vector_clockwise(direction))
+    if position + behind == vec then
+        return true
+    else
+        return false
+    end
+end
+
+--- checks if the given position is adjacent to the turtle (above, below, beside)
 function is_adjacent(vec)
-    --- TODO: Implement
+    return is_above(vec) or is_below(vec) or is_right(vec) or is_left(vec) or is_front(vec) or is_behind(vec)
 end
 
 --- mines the block at the given position if it is adjacent

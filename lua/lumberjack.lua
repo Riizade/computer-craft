@@ -1,4 +1,4 @@
-local max_tree_height = 15
+local max_tree_height = 30
 
 --- refuel (needs to go all the way up and all the way down) ---
 shell.run("min_fuel", tostring(max_tree_height*2))
