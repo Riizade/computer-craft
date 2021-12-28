@@ -5,6 +5,33 @@ position = vector.new(0, 0, 0)
 direction = vector.new(0, 0, 1)
 movement_history = {}
 
+function is_direction_vector(vec)
+    --- check that the absolute value of any coordinate is no greater than 1
+    if math.abs(v.x) > 1 or math.abs(v.y) > 1 or math.abs(v.z) > 1 then
+        return false
+    end
+
+    --- check that there is exactly 1 1/-1 coordinate
+    local count = 0
+    if v.x == 1 or v.x == -1 then
+        count = count + 1
+    end
+
+    if v.y == 1 or v.y == -1 then
+        count = count + 1
+    end
+
+    if v.y == 1 or v.y == -1 then
+        count = count + 1
+    end
+
+    if count ~= 1 then
+        return false
+    end
+
+    return true
+end
+
 --- creates a string that records the sign of each vector axis (e.g. (-1, 0, 1) > "-0+")
 function direction_char(coord)
     if coord < 0 then
@@ -161,66 +188,87 @@ function check_blocks()
     return blocks
 end
 
---- checks if the given position is above the turtle
-function is_above(vec)
-    if position + vector.new(0, 1, 0) == vec then
+--- checks if b is above a
+function is_above(a, b)
+    if a + vector.new(0, 1, 0) == b then
         return true
     else
         return false
     end
 end
 
---- checks if the given position is below the turtle
-function is_below(vec)
-    if position + vector.new(0, -1, 0) == vec then
+--- checks if b is below a
+function is_below(a, b)
+    if a + vector.new(0, -1, 0) == b then
         return true
     else
         return false
     end
 end
 
---- checks if the given position is left of the turtle
-function is_left(vec)
+--- checks if the b is left of a
+function is_left(a, b)
     local left = rotate_direction_vector_counterclockwise(direction)
-    if position + left == vec then
+    if a + left == b then
         return true
     else
         return false
     end
 end
 
---- checks if the given position is right of the turtle
-function is_right(vec)
+--- checks if b is right of a
+function is_right(a, b)
     local right = rotate_direction_vector_clockwise(direction)
-    if position + right == vec then
+    if a + right == b then
         return true
     else
         return false
     end
 end
 
---- checks if the given position is in front of the turtle
-function is_front(vec)
-    if position + direction == vec then
+--- checks if b is in front of a
+function is_front(a, b)
+    if a + direction == b then
         return true
     else
         return false
     end
 end
 
---- checks if the given position is behind the turtle
-function is_behind(vec)
+--- checks if b is behind a
+function is_behind(a, b)
     local behind = rotate_direction_vector_clockwise(rotate_direction_vector_clockwise(direction))
-    if position + behind == vec then
+    if a + behind == b then
         return true
     else
         return false
     end
 end
 
---- checks if the given position is adjacent to the turtle (above, below, beside)
-function is_adjacent(vec)
-    return is_above(vec) or is_below(vec) or is_right(vec) or is_left(vec) or is_front(vec) or is_behind(vec)
+--- checks if the given positions are adjacent to each other (above, below, beside)
+function is_adjacent(a, b)
+    return is_above(a, b) or is_below(a, b) or is_right(a, b) or is_left(a, b) or is_front(a, b) or is_behind(a, b)
+end
+
+--- moves the turtle forward and records history
+function move_forward()
+    turtle.forward()
+    position = position + direction
+    movement_history[vector_to_string(position)]
+end
+
+--- moves the turtle up and records history
+function move_up()
+    turtle.up()
+    position = position + vector.new(0, 1, 0)
+    movement_history[vector_to_string(position)]
+end
+
+--- moves the turtle down and records history
+function move_down()
+    turtle.down()
+    position = position + vector.new(0, -1, 0)
+    movement_history[vector_to_string(position)]
 end
 
 --- mines the block at the given position if it is adjacent
@@ -235,7 +283,26 @@ end
 
 --- move in the direction determined by the given vector, rotating if necessary
 function move_direction(vec)
-    --- TODO: implement
+    if not is_direction_vector(vec) then
+        error("non-direction vector " .. vector_to_string(vec) .. " given to move_direction()")
+    end
+
+    --- if the y vector is 0, we rotate and move forward
+    if vec.y == 0 then
+        rotate_to(direction, vec)
+        move_forward()
+    elseif vec.y == 1 then
+        move_up()
+    elseif vec.y == -1 then
+        move_down()
+    else
+        error("a bug is present, should not have been able to reach this error in move_direction() (given " .. vector_to_string(vec) .. ")")
+    end
+end
+
+--- move the turtle to the given adjacent position
+function move_adjacent(vec)
+    move_direction(vec - position)
 end
 
 --- move to the given coordinates, will not attempt to pathfind and can easily get stuck
@@ -243,8 +310,27 @@ function move(destination_vec)
     --- TODO: implement
 end
 
---- move to the given coordinates by retracing its steps, will not work if it has not been to this location before
-function backtrack(destination_vec)
+--- finds any position in the movement history adjacent to the given position, or nil if none is found
+function find_adjacent_history(target_vec)
+    local destination_vec = nil
+    for pos_string, bleh in pairs(movement_history) do
+        vec = string_to_vector(pos_string)
+        if is_adjacent(vec, target_vec) then
+            destination_vec = vec
+            break
+        end
+    end
+
+    return destination_vec
+end
+
+--- move adjacent to the given coordinates by retracing its steps, will not work if it has not been to this location before
+function backtrack_adjacent(target_vec)
+    destination_vec = find_adjacent_history(target_vec)
+
+    if destination_vec == nil then
+        error("could not backtrack to target " .. vector_to_string(target_vec))
+    end
     --- TODO: implement
 end
 
@@ -256,4 +342,4 @@ return {
     check_blocks = check_blocks,
     move_direction = move_direction,
     move = move,
-    backtrack = backtrack }
+    backtrack_adjacent = backtrack_adjacent }
