@@ -287,10 +287,11 @@ function move_direction(vec)
         error("non-direction vector " .. vector_to_string(vec) .. " given to move_direction()")
     end
 
-    --- if the y vector is 0, we rotate and move forward
+    --- if the y vector is 0, we rotate and move forward (because the direction will be along the x/z axes, which can be faced via rotation)
     if vec.y == 0 then
         rotate_to(direction, vec)
         move_forward()
+    --- if the y vector is not zero, it must be 1 or -1, and we can simply move up or down
     elseif vec.y == 1 then
         move_up()
     elseif vec.y == -1 then
