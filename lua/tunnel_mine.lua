@@ -1,0 +1,1 @@
+--- TODO: implement (consider erasing navigation.movement_history after calling mine_vein to prevent infinitely growing memory)

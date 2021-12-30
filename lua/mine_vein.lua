@@ -19,7 +19,7 @@ end
 
 --- returns the position of the closest desired block
 function closest_desired_block()
-
+    --- TODO: implement (use manhattan distance)
 end
 
 --- check if we're looking at a desired block ---
