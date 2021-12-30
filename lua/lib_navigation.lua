@@ -1,4 +1,5 @@
 local utils = require("lib_utils")
+local a_star = require("lib_a_star")
 
 --- track position and movement history as global variables ---
 position = vector.new(0, 0, 0)
@@ -69,6 +70,60 @@ end
 function string_to_vector(s)
     list = utils.split(s)
     return vector.new(list[0], list[1], list[2])
+end
+
+
+--- returns manhattan distance of the given vectors
+function manhattan_distance(a, b)
+    math.abs(a.x - b.x) + math.abs(a.y - b.y) + math.abs(a.z - b.z)
+end
+
+--- same as manhattan_distance() but operates on vector strings
+function manhattan_distance_strings(a, b)
+    return manhattan_distance(string_to_vector(a), string_to_vector(b))
+end
+
+--- enumerates neighbors of a given vec
+function enumerate_neighbors(vec)
+    local neighbors = {
+        vec + vector.new(1, 0, 0),
+        vec + vector.new(-1, 0, 0),
+        vec + vector.new(0, 1, 0),
+        vec + vector.new(0, -1, 0),
+        vec + vector.new(0, 0, 1),
+        vec + vector.new(0, 0, -1),
+    }
+
+    return neighbors
+end
+
+--- enumerates a neighbor only if we've been to that neighbor (ie, it exists in movement_history)
+function enumerate_seen_neighbors(vec)
+    local potential_neighbors = enumerate_neighbors(vec)
+    local desired_neighbors = {}
+    for idx, pos in pairs(potential_neighbors) do
+        if movement_history[pos] ~= nil then
+            desired_neighbors[#desired_neighbors+1] = pos
+        end
+    end
+
+    return desired_neighbors
+end
+
+--- uses enumerate_neighbors function for vecs and wraps it to operate on strings
+function enumerate_neighbors_string(vec_string, f_neighbors)
+    local neighbor_vecs = f_neighbors(string_to_vector(vec_string))
+    local neighbor_strings = {}
+    for idx, vec in pairs(neighbor_vecs) do
+        neighbor_strings[#neighbor_string+1] = vector_to_string(vec)
+    end
+
+    return neighbor_strings
+end
+
+--- wraps enumerate_seen_neighbors to operate on vector strings
+function enumerate_seen_neighbors_string(vec_string)
+    return enumerate_neighbors_string(vec_string, enumerate_seen_neighbors)
 end
 
 function rotations_count(src_dir_string, dest_dir_string, rotations_table)
@@ -254,21 +309,21 @@ end
 function move_forward()
     turtle.forward()
     position = position + direction
-    movement_history[vector_to_string(position)]
+    movement_history[vector_to_string(position)] = "dummy"
 end
 
 --- moves the turtle up and records history
 function move_up()
     turtle.up()
     position = position + vector.new(0, 1, 0)
-    movement_history[vector_to_string(position)]
+    movement_history[vector_to_string(position)] = "dummy"
 end
 
 --- moves the turtle down and records history
 function move_down()
     turtle.down()
     position = position + vector.new(0, -1, 0)
-    movement_history[vector_to_string(position)]
+    movement_history[vector_to_string(position)] = "dummy"
 end
 
 --- mines the block at the given position if it is adjacent
@@ -330,9 +385,13 @@ function backtrack_adjacent(target_vec)
     destination_vec = find_adjacent_history(target_vec)
 
     if destination_vec == nil then
-        error("could not backtrack to target " .. vector_to_string(target_vec))
+        error("could not backtrack adjacent to target " .. vector_to_string(target_vec))
     end
-    --- TODO: implement
+
+    local path = a_star.a_star(position, destination_vec, manhattan_distance_strings, enumerate_neighbors_string)
+    for i=1,#path do
+       move_adjacent(path[i])
+    end
 end
 
 return {

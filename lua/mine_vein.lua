@@ -27,8 +27,7 @@ local present, data = turtle.inspect()
 if block.data.name == desired_block_data.name then
     --- dig block then replace it
     turtle.dig()
-    turtle.forward()
+    navigation.move_forward()
     --- look around for new blocks
     discover_blocks()
 end
-
